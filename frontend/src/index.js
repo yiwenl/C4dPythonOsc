@@ -1,47 +1,43 @@
-console.log('init');
-
 const vs = require('./basic.vert');
 const fs = require('./basic.frag');
 const PORT_SOCKET = 9876;
 const TARGET_SERVER_IP = '192.168.10.30:'+PORT_SOCKET;
-let socket = require('./libs/socket.io-client')(TARGET_SERVER_IP);
+const socket = require('./libs/socket.io-client')(TARGET_SERVER_IP);
 
 import './global.scss';
 import alfrid from 'alfrid';
 
-console.log(alfrid);
-
 let camera, mesh, shader, bAxis;
 let GL = alfrid.GL;
-let position = [0, 0, 10];
 let lightPosition = [0, 1, 1];
 
 window.addEventListener('load', _init);
 
 
 function _init() {
-	console.log('init');
 	let canvas = document.createElement("canvas");
 	document.body.appendChild(canvas);
 	canvas.className = 'Main-Canvas';
 
+	//	INIT GL TOOL
 	GL.init(canvas);
 
 
 	//	CAMREA
 	camera = new alfrid.CameraPerspective();
 	camera.setPerspective(Math.PI/2, GL.aspectRatio, 1, 10000);
-	camera.lookAt(position, [0, 0, 0], [0, 1, 0]);
-	// new alfrid.OrbitalControl(camera, window, 10);
+	camera.lookAt([0, 0, 10], [0, 0, 0], [0, 1, 0]);
 
+	//	HELPER
 	bAxis = new alfrid.BatchAxis();
 
-	//	mesh
+	//	MESH
 	mesh = alfrid.Geom.sphere(1, 24, true);
 
-	//	shader
+	//	SHADER
 	shader = new alfrid.GLShader(vs, fs);
 
+	//	LOOPING
 	alfrid.Scheduler.addEF(loop);
 }
 
@@ -55,19 +51,16 @@ function loop() {
 	shader.bind();
 	shader.uniform("lightPosition", "vec3", lightPosition);
 	GL.draw(mesh);
-	// if(Math.random() > .9) console.log(camera.matrix);
-	// if(Math.random() > .9) console.log(position);
 }
 
+
+//	WEBSOCKETS COMM
 
 socket.on('cameraPosition', (pos)=>_onCameraPosition(pos));
 socket.on('lightPosition', (pos)=>_onLightPosition(pos));
 
-
-
 function _onCameraPosition(pos) {
-	position = [pos.x, pos.y, pos.z];
-	camera.lookAt(position, [0, 0, 0], [0, 1, 0]);
+	camera.lookAt([pos.x, pos.y, pos.z], [0, 0, 0], [0, 1, 0]);
 }
 
 

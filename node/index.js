@@ -24,6 +24,8 @@ let receiver = new OscReceiver();
 receiver.bind(PORT_OSC);
 
 
+//	OSC MESSAGES HANDLING
+
 receiver.on('/cameraPos', function(x, y, z) {
 	console.log('Camera Position : ', x, y, z);
 	io.emit('cameraPosition', {x:-x, y:y, z:z})
