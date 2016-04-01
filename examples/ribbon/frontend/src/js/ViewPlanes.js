@@ -22,7 +22,7 @@ class ViewPlanes extends alfrid.View {
 		let numParticles = params.numParticles;
 		let ux, uy;
 
-		const size = 0.1;
+		const size = 0.05;
 
 		for(let j=0; j<numParticles; j++) {
 			for(let i=0; i<numParticles; i++) {

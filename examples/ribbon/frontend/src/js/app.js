@@ -8,7 +8,7 @@ const GL = alfrid.GL;
 const assets = [];
 window.params = {
 	numParticles:32,
-	skipCount:10,
+	skipCount:1,
 	maxRadius: 2.5,
 	minRadius: 0.25,
 	rotationSpeed:0.0175,

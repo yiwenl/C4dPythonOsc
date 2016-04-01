@@ -139,17 +139,17 @@ void main(void) {
 	velRotation.xz   = rotate(velRotation.xz, PI * .5);
 	velRotation      = normalize(velRotation);
 	
-	vel              += acc * noiseSpeed;
-	vel              += velRotation * rotationSpeed;
+	vel              += acc * noiseSpeed * 0.1;
+	vel              += velRotation * rotationSpeed * 0.1;
 
 	float dist = length(pos);
 	if(dist > maxRadius) {
-		float f = (dist - maxRadius) * .01;
+		float f = (dist - maxRadius) * 0.001;
 		vel -= normalize(pos) * f;
 	}
 
 	if(dist < minRadius) {
-		float f = ( minRadius - dist) * .1;
+		float f = ( minRadius - dist) * 0.01;
 		vel += normalize(pos) * f;
 	}
 
