@@ -8,11 +8,12 @@ let io     = require('socket.io')(server);
 
 //	OSC EMITTER
 
-const PORT_EMIT_OSC = 8888;
+const PORT_EMIT_OSC = 8885;
 const OscEmitter = require("osc-emitter");
 
 let emitter = new OscEmitter();
 emitter.add('localhost', PORT_EMIT_OSC);
+emitter.add('localhost', PORT_EMIT_OSC+1);
 
 
 //	WEB SOCKETS
@@ -44,7 +45,6 @@ function _onParticlePositions(positions) {
 	let num = positions.length /3;
 	console.log('On Position:', num);
 	for(let i=0; i<num; i++) {
-		console.log(positions[i*3], _getNumber(positions[i*3]) );
 		emitter.emit('/positions', positions[i*3], positions[i*3+1], positions[i*3+2], i);
 	}
 }

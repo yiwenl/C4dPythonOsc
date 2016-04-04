@@ -4,7 +4,7 @@
 
 //	OSC RECEIVER
 
-const PORT_OSC = 8888;
+const PORT_OSC = 8889;
 const OscReceiver = require("osc-receiver");
 
 let receiver = new OscReceiver();
