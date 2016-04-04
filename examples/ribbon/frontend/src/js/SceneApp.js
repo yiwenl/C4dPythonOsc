@@ -18,6 +18,10 @@ class SceneApp extends alfrid.Scene {
 		this.orbitalControl.radius.value = 15;
 		// this.orbitalControl.rx.value = 0.25;
 		// this.orbitalControl.ry.value = 0.5;
+
+		const numParticles = params.numParticles;
+		const arraysize = numParticles * numParticles * 4;
+		this._pixels = new Float32Array(arraysize);
 	}
 
 	_initTextures() {
@@ -114,11 +118,36 @@ class SceneApp extends alfrid.Scene {
 		this._bDots.draw();
 
 		// this._vRender.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
-		this._vPlanes.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
+		// this._vPlanes.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
 
 		// const size = 128;
 		// GL.viewport(0, 0, size, size);
 		// this._bCopy.draw(this._fboExtra.getTexture());
+
+		if(params.sendPositions) {
+			this.readPositions();	
+		}
+		
+	}
+
+
+	readPositions() {
+		console.log('Sending position:');
+		this._fboCurrentPos.bind();
+		GL.gl.readPixels(0, 0, params.numParticles, params.numParticles, GL.gl.RGBA, GL.gl.FLOAT, this._pixels);
+		this._fboCurrentPos.unbind();
+		params.sendPositions = false;
+
+		let positions = [];
+		for(let i=0; i<this._pixels.length; i+=4) {
+			positions.push(this._pixels[i]);
+			positions.push(this._pixels[i+1]);
+			positions.push(this._pixels[i+2]);
+		}
+
+		console.log(positions);
+
+		socket.emit('particlePosition', positions);
 	}
 
 

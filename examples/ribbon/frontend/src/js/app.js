@@ -4,9 +4,15 @@ import SceneApp from './SceneApp';
 import AssetsLoader from 'assets-loader';
 import dat from 'dat-gui';
 
+const PORT_SOCKET = 9876;
+const TARGET_SERVER_IP = '192.168.10.30:'+PORT_SOCKET;
+const socket = require('./libs/socket.io-client')(TARGET_SERVER_IP);
+window.socket = socket;
+
 const GL = alfrid.GL;
 const assets = [];
 window.params = {
+	sendPositions:false,
 	numParticles:32,
 	skipCount:1,
 	maxRadius: 2.5,
@@ -76,4 +82,17 @@ function _init3D() {
 	gui.add(params, 'rotationSpeed', 0.0, 0.1);
 	gui.add(params, 'noiseSpeed', 0.0, 0.1);
 
+	window.addEventListener('keydown', (e)=>_onKey(e));
 }
+
+function _onKey(e) {
+	console.log(e.keyCode);
+	if(e.keyCode == 84) {
+		console.log('Testing from js', socket.emit, socket);
+		socket.emit('test', {str:'hello'});
+	} else if (e.keyCode == 83) {
+		params.sendPositions = true;
+	}
+}
+
+
