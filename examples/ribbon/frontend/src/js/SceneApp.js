@@ -13,6 +13,7 @@ class SceneApp extends alfrid.Scene {
 	constructor() {
 		super();
 		GL.enableAlphaBlending();
+		GL.disable(GL.CULL_FACE);
 
 		this._count = 0;
 		this.orbitalControl.radius.value = 15;

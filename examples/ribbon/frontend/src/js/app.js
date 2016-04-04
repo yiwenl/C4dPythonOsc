@@ -7,11 +7,11 @@ import dat from 'dat-gui';
 const GL = alfrid.GL;
 const assets = [];
 window.params = {
-	numParticles:32,
+	numParticles:128,
 	skipCount:1,
 	maxRadius: 2.5,
 	minRadius: 0.25,
-	rotationSpeed:0.0175,
+	rotationSpeed:0.025,
 	noiseSpeed:0.02
 }
 
