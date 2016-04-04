@@ -25,7 +25,7 @@ function _onConnected(socket) {
 
 	socket.on('disconnect', ()=>_onDisconnected() );
 	socket.on('test', (o)=>_onTest(o) );
-	socket.on('particlePosition', (positions)=>_onParticlePositions(positions));
+	socket.on('particlePosition', (positions, frame)=>_onParticlePositions(positions, frame));
 }
 
 
@@ -38,17 +38,23 @@ function _onTest(o) {
 	console.log('on Test : ', o);
 }
 
+let _frame = 0;
 
-function _onParticlePositions(positions) {
+
+function _onParticlePositions(positions, frame) {
 	
+	let time = new Date().getTime();
 	// emitter.emit('/positions', positions[0], positions[1], positions[2], positions[3]);
 	let num = positions.length /3;
-	console.log('On Position:', num);
+	// console.log('On Position:', num);
 	for(let i=0; i<num; i++) {
 		emitter.emit('/positions', positions[i*3], positions[i*3+1], positions[i*3+2], i);
 	}
 
+	let elapsed = new Date().getTime() - time;
+	console.log('Elapsed : ', elapsed, ", Frame : ", frame, "/", _frame);
 	emitter.emit('/update', 'update');
+	_frame ++;
 }
 
 /*
