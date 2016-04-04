@@ -136,7 +136,7 @@ class SceneApp extends alfrid.Scene {
 		this._fboCurrentPos.bind();
 		GL.gl.readPixels(0, 0, params.numParticles, params.numParticles, GL.gl.RGBA, GL.gl.FLOAT, this._pixels);
 		this._fboCurrentPos.unbind();
-		params.sendPositions = false;
+		// params.sendPositions = false;
 
 		let positions = [];
 		for(let i=0; i<this._pixels.length; i+=4) {

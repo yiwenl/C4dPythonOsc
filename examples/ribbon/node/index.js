@@ -47,6 +47,8 @@ function _onParticlePositions(positions) {
 	for(let i=0; i<num; i++) {
 		emitter.emit('/positions', positions[i*3], positions[i*3+1], positions[i*3+2], i);
 	}
+
+	emitter.emit('/update', 'update');
 }
 
 /*
