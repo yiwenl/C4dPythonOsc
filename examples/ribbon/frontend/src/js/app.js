@@ -91,7 +91,7 @@ function _onKey(e) {
 		console.log('Testing from js', socket.emit, socket);
 		socket.emit('test', {str:'hello'});
 	} else if (e.keyCode == 83) {
-		params.sendPositions = true;
+		params.sendPositions = !params.sendPositions;
 	}
 }
 

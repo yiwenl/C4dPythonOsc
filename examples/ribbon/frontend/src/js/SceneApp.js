@@ -145,8 +145,6 @@ class SceneApp extends alfrid.Scene {
 			positions.push(this._pixels[i+2]);
 		}
 
-		console.log(positions);
-
 		socket.emit('particlePosition', positions);
 	}
 
