@@ -8,6 +8,7 @@ import ViewSim from './ViewSim';
 import ViewPlanes from './ViewPlanes';
 
 const GL = alfrid.GL;
+const RENDER_INTERVAL = 500;
 
 class SceneApp extends alfrid.Scene {
 	constructor() {
@@ -19,6 +20,11 @@ class SceneApp extends alfrid.Scene {
 		this.orbitalControl.radius.value = 15;
 		// this.orbitalControl.rx.value = 0.25;
 		// this.orbitalControl.ry.value = 0.5;
+
+		const numParticles = params.numParticles;
+		const arraysize = numParticles * numParticles * 4;
+		this._pixels = new Float32Array(arraysize);
+		this._frame = 0;
 	}
 
 	_initTextures() {
@@ -36,6 +42,9 @@ class SceneApp extends alfrid.Scene {
 		this._fboCurrentVel = new alfrid.FrameBuffer(numParticles, numParticles, o);
 		this._fboTargetVel  = new alfrid.FrameBuffer(numParticles, numParticles, o);
 		this._fboExtra  	= new alfrid.FrameBuffer(numParticles, numParticles, o);
+
+
+		window.setInterval( ()=>this._renderOnInterval(), RENDER_INTERVAL);
 	}
 
 
@@ -100,6 +109,10 @@ class SceneApp extends alfrid.Scene {
 	}
 
 
+	_renderOnInterval() {
+		console.log('Render on Interval :');
+	}
+
 	render() {
 
 		this._count ++;
@@ -114,12 +127,36 @@ class SceneApp extends alfrid.Scene {
 		this._bAxis.draw();
 		this._bDots.draw();
 
-		// this._vRender.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
-		this._vPlanes.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
+		this._vRender.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
+		// this._vPlanes.render(this._fboTargetPos.getTexture(), this._fboCurrentPos.getTexture(), p, this._fboExtra.getTexture());
 
 		// const size = 128;
 		// GL.viewport(0, 0, size, size);
 		// this._bCopy.draw(this._fboExtra.getTexture());
+
+		if(params.sendPositions) {
+			this.readPositions();	
+		}
+		
+	}
+
+
+	readPositions() {
+		console.log('Sending position:', this._frame);
+		this._fboCurrentPos.bind();
+		GL.gl.readPixels(0, 0, params.numParticles, params.numParticles, GL.gl.RGBA, GL.gl.FLOAT, this._pixels);
+		this._fboCurrentPos.unbind();
+		// params.sendPositions = false;
+
+		let positions = [];
+		for(let i=0; i<this._pixels.length; i+=4) {
+			positions.push(this._pixels[i]);
+			positions.push(this._pixels[i+1]);
+			positions.push(this._pixels[i+2]);
+		}
+
+		socket.emit('particlePosition', positions, this._frame);
+		this._frame ++;
 	}
 
 

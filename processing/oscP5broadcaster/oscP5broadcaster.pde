@@ -25,10 +25,11 @@ String myDisconnectPattern = "/server/disconnect";
 
 void setup() {
   oscP5 = new OscP5(this, myListeningPort);
-  frameRate(25);
+  frameRate(60);
 }
 
 void draw() {
+  println("draw");
   background(0);
 }
 
