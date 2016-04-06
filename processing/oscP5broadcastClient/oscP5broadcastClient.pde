@@ -10,14 +10,14 @@ import netP5.*;
 
 
 OscP5 oscP5;
-int PORT_OUTGOING = 9007;
+int PORT_OUTGOING = 8895;
 
 /* a NetAddress contains the ip address and port number of a remote location in the network. */
 NetAddress myBroadcastLocation; 
 
 void setup() {
   size(400,400);
-  frameRate(25);
+  frameRate(60);
   
   /* create a new instance of oscP5. 
    * 12000 is the port number you are listening for incoming osc messages.
@@ -34,7 +34,15 @@ void setup() {
 
 
 void draw() {
+  float x = mouseX/float(width) - 0.5f;
+  float y = mouseY/float(height) - 0.5f;
+  println("draw : " + x + "/" + y);
   background(0);
+  
+  OscMessage myOscMessage = new OscMessage("/test");
+  myOscMessage.add(x * 500);
+  myOscMessage.add(-y * 500);
+  oscP5.send(myOscMessage, myBroadcastLocation);
 }
 
 
